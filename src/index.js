@@ -64,7 +64,7 @@ function swhwMode() {
 function pullImages(hwMode) {
   // Should Get/Compute the actual sizes of those images
   inquirer.prompt(questions.size).then(async function(answer) {
-    if(answer.start === 'n' | answer.start === 'N'){
+    if(answer.size === 'n' | answer.size === 'N'){
       process.exit()
     }
     console.log('Pulling Enigma Docker images...')
@@ -87,11 +87,11 @@ function init() {
     )
   );
 
-  inquirer.prompt(questions.start).then(answer => {
+  inquirer.prompt(questions.start).then(async function(answer) {
     if(answer.start === 'n' | answer.start === 'N'){
       process.exit()
     }
-    deps.checkDependencies();
+    await deps.checkDependencies();
     createFolders();
     downloadFiles();
     swhwMode();
