@@ -19,9 +19,11 @@ function downloadFiles() {
   axios.all([
     axios.get(constants.URL.DOCKER_COMPOSE_HW),
     axios.get(constants.URL.DOCKER_COMPOSE_SW),
-  ]).then(axios.spread((response1, response2) => {
+    axios.get(constants.URL.CARGO_TOML)
+  ]).then(axios.spread((response1, response2, response3) => {
       fs.writeFileSync(constants.FILE.DOCKER_COMPOSE_HW, response1.data);
       fs.writeFileSync(constants.FILE.DOCKER_COMPOSE_SW, response2.data);
+      fs.writeFileSync(`secret_contracts/${constants.FILE.CARGO_TOML}`, response3.data)
     }))
     .catch(error => {
       console.log(error);
@@ -90,8 +92,8 @@ function init() {
       process.exit()
     }
     deps.checkDependencies();
-    downloadFiles();
     createFolders();
+    downloadFiles();
     swhwMode();
   });
 }
