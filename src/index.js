@@ -9,6 +9,7 @@ const figlet = require('figlet');
 const inquirer = require('inquirer');
 const compose = require('docker-compose');
 
+const deps = require('./deps');
 const docker = require('./docker');
 const constants = require('./constants');
 const questions = require('./questions');
@@ -68,11 +69,11 @@ function pullImages(hwMode) {
     await docker.pullImage(constants.DOCKER.P2P, 'latest');
     await docker.pullImage(constants.DOCKER.CONTRACT, 'latest');
     if(hwMode){
-      docker.pullImage(constants.DOCKER.KM_HW, 'latest');
-      docker.pullImage(constants.DOCKER.CORE_HW, 'latest');
+      await docker.pullImage(constants.DOCKER.KM_HW, 'latest');
+      await docker.pullImage(constants.DOCKER.CORE_HW, 'latest');
     } else {
-      docker.pullImage(constants.DOCKER.KM_SW, 'latest');
-      docker.pullImage(constants.DOCKER.CORE_SW, 'latest');
+      await docker.pullImage(constants.DOCKER.KM_SW, 'latest');
+      await docker.pullImage(constants.DOCKER.CORE_SW, 'latest');
     }
   });
 }
@@ -88,6 +89,7 @@ function init() {
     if(answer.start === 'n' | answer.start === 'N'){
       process.exit()
     }
+    deps.checkDependencies();
     downloadFiles();
     createFolders();
     swhwMode();

@@ -58,4 +58,5 @@ Object.keys(module.exports.SERVICE).forEach(function(key){
 module.exports.SERVICES = services;
 
 module.exports.ENCODING = 'utf-8';
+module.exports.DEPENDENCIES = ['docker', 'docker-compose'];
 
