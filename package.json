@@ -14,7 +14,7 @@
     "axios": "^0.18.0",
     "chalk": "^2.4.2",
     "clui": "^0.3.6",
-    "docker-compose": "github:enigmampc/docker-compose#multipleLogs",
+    "docker-compose": "^0.17.4",
     "figlet": "^1.2.3",
     "get-cursor-position": "^1.0.5",
     "hasbin": "^1.2.3",
