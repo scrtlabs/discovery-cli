@@ -11,7 +11,6 @@ const constants = require('./constants');
 module.exports.migrate = async function() {
 
   const baseFolder = deps.findBasePath();
-  const folderSecretContracts = path.join(baseFolder, constants.FOLDER.BUILD, constants.FOLDER.SECRET_CONTRACTS);
   const folderSmartContracts = path.join(baseFolder, constants.FOLDER.BUILD, constants.FOLDER.SMART_CONTRACTS);
 
   const network = 'development';
