@@ -20,13 +20,15 @@ module.exports.FILE = {
   CARGO_TOML: 'Cargo.toml',
   ENV_TEMPLATE: '.env-template',
   ENV: '.env'
-
 }
 
 module.exports.FOLDER = {
   SMART_CONTRACTS: 'smart_contracts',
   SECRET_CONTRACTS: 'secret_contracts',
-  TEST: 'test'
+  TEST: 'test',
+  BUILD: 'build',
+  CONTRACT_PATH: 'target/wasm32-unknown-unknown/release/',
+  SAMPLE_CONTRACT: 'simple_addition'
 }
 
 module.exports.URL = {
@@ -37,6 +39,7 @@ module.exports.URL = {
   DOCKERHUB_P2P: `${DOCKERHUB_API}${ORG}/${REPO_P2P}/tags/latest/`,
   DOCKERHUB_CORE: `${DOCKERHUB_API}${ORG}/${REPO_CORE_HW}/tags/latest/`,
   DOCKERHUB_CONTRACT: `${DOCKERHUB_API}${ORG}/${REPO_CONTRACT}/tags/latest/`,
+  SAMPLE_CONTRACT: `${RAWGIT_CLI}config/lib.rs`,
 }
 
 module.exports.DOCKER = {
@@ -56,6 +59,12 @@ module.exports.SERVICE = {
   CONTRACT: 'contract'
 }
 
+module.exports.CONTRACT = {
+  ENIGMA: 'Enigma.json',
+  ENIGMA_SIMULATION: 'EnigmaSimulation.json',
+  ENIGMA_TOKEN: 'EnigmaToken.json'
+}
+
 var services = [];
 Object.keys(module.exports.SERVICE).forEach(function(key){
   services.push(module.exports.SERVICE[key])
@@ -64,4 +73,4 @@ module.exports.SERVICES = services;
 
 module.exports.ENCODING = 'utf-8';
 module.exports.DEPENDENCIES = ['docker', 'docker-compose', 'rustc', 'cargo', 'rustup'];
-
+module.exports.RUST_NIGHTLY = 'nightly-2019-05-20';

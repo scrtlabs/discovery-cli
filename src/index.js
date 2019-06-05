@@ -11,6 +11,7 @@ const compose = require('docker-compose');
 
 const deps = require('./deps');
 const docker = require('./docker');
+const migrate = require('./migrate');
 const constants = require('./constants');
 const questions = require('./questions');
 
@@ -19,11 +20,17 @@ function downloadFiles() {
   axios.all([
     axios.get(constants.URL.DOCKER_COMPOSE_HW),
     axios.get(constants.URL.DOCKER_COMPOSE_SW),
-    axios.get(constants.URL.CARGO_TOML)
-  ]).then(axios.spread((response1, response2, response3) => {
+    axios.get(constants.URL.CARGO_TOML),
+    axios.get(constants.URL.SAMPLE_CONTRACT)
+  ]).then(axios.spread((response1, response2, response3, response4) => {
       fs.writeFileSync(constants.FILE.DOCKER_COMPOSE_HW, response1.data);
       fs.writeFileSync(constants.FILE.DOCKER_COMPOSE_SW, response2.data);
-      fs.writeFileSync(`secret_contracts/${constants.FILE.CARGO_TOML}`, response3.data)
+      fs.writeFileSync(`${constants.FOLDER.SECRET_CONTRACTS}/${constants.FILE.CARGO_TOML}.template`, response3.data);
+      let sampleContractFolder = path.join(constants.FOLDER.SECRET_CONTRACTS, constants.FOLDER.SAMPLE_CONTRACT);
+      if (!fs.existsSync(sampleContractFolder)) {
+        fs.mkdirSync(path.join(sampleContractFolder,'src'), {recursive: true});
+      }
+      fs.writeFileSync(path.join(sampleContractFolder,'src/lib.rs'), response4.data);
     }))
     .catch(error => {
       console.log(error);
@@ -37,21 +44,30 @@ function createFolders() {
   if (!fs.existsSync(constants.FOLDER.SECRET_CONTRACTS)){
     fs.mkdirSync(constants.FOLDER.SECRET_CONTRACTS);
   }
+  if (!fs.existsSync(constants.FOLDER.BUILD)){
+    fs.mkdirSync(constants.FOLDER.BUILD);
+  }
+  if (!fs.existsSync(path.join(constants.FOLDER.BUILD, constants.FOLDER.SMART_CONTRACTS))){
+    fs.mkdirSync(path.join(constants.FOLDER.BUILD, constants.FOLDER.SMART_CONTRACTS));
+  }
+}
+
+function contentsEnvFile(mode) {
+  const folder = path.join(process.cwd(), constants.FOLDER.BUILD, constants.FOLDER.SMART_CONTRACTS);
+  return `COMPOSE_PROJECT_NAME=enigma\nSGX_MODE=${mode}\nBUILD_CONTRACTS_PATH=${folder}`;
 }
 
 function swhwMode() {
   inquirer.prompt(questions.mode).then(answer => {
     if(answer.mode === 'sw' | answer.mode === 'SW') {
-      const contents = 'COMPOSE_PROJECT_NAME=enigma\nSGX_MODE=SW';
-      fs.writeFileSync(constants.FILE.ENV, contents, constants.ENCODING);
+      fs.writeFileSync(constants.FILE.ENV, contentsEnvFile('SW'), constants.ENCODING);
       if(fs.existsSync('docker-compose.yml')) {
         fs.unlinkSync('docker-compose.yml');
       }
       fs.symlinkSync(constants.FILE.DOCKER_COMPOSE_SW, 'docker-compose.yml')
       pullImages(false);
     } else {
-      const contents = 'COMPOSE_PROJECT_NAME=enigma\nSGX_MODE=HW'
-      fs.writeFileSync(constants.FILE.ENV, contents, constants.ENCODING);
+      fs.writeFileSync(constants.FILE.ENV, contentsEnvFile('HW'), constants.ENCODING);
       if(fs.existsSync('docker-compose.yml')) {
         fs.unlinkSync('docker-compose.yml');
       }
@@ -99,17 +115,26 @@ function init() {
 }
 
 function start() {
-  compose.upAll({ cwd: path.join(__dirname), log: true })
-  .then(
-    async () => { 
-      compose.logs(constants.SERVICES, {cwd: path.join(__dirname), log: true, follow: true});
-    },
-    err => { console.log('something went wrong:', err.message)}
-  );
+  compose.ps({})
+  .then( async (output) => {
+    let myReg = new RegExp(Object.keys(constants.SERVICE).map((key) => {return `${constants.SERVICE[key]}_1`}).join('|'))
+    if(output.out.match(myReg)){
+      console.log('Enigma Network is already running, stopping it first.')
+      await stop();
+    }
+    console.log('Starting Enigma Network...');
+    compose.upAll({ cwd: process.cwd(), log: true })
+    .then(
+      async () => {
+        compose.logs(constants.SERVICES, {cwd: process.cwd(), log: true, follow: true});
+      },
+      err => { console.log('something went wrong:', err.message)}
+    );
+  });
 }
 
-function stop() {
-  compose.down({ cwd: path.join(__dirname), log: true })
+async function stop() {
+  return compose.down({ cwd: process.cwd(), log: true })
   .then(
     err => { if(err.message){ console.log('something went wrong:', err.message)}}
   );
@@ -124,6 +149,12 @@ argv
   })
   .command('stop', 'Stop the network by stopping and removing all containers', () => {}, () => {
     stop();
+  })
+  .command('compile', 'Compile Secret Contracts', () => {}, () => {
+    deps.compile();
+  })
+  .command('migrate', 'Migrate Secret Contracts', () => {}, () => {
+    migrate.migrate();
   })
   .demandCommand(1)
   .argv
