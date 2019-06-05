@@ -6,6 +6,7 @@ const argv = require('yargs');
 const axios = require('axios');
 const chalk = require('chalk');
 const figlet = require('figlet');
+const dotenv = require('dotenv');
 const inquirer = require('inquirer');
 const {spawn} = require('child_process');
 const compose = require('docker-compose');
@@ -108,6 +109,18 @@ function swhwMode() {
   });
 }
 
+function getHWMode(){
+  dotenv.config();
+  if(typeof process.env.SGX_MODE === 'undefined' || (process.env.SGX_MODE != 'SW' && process.env.SGX_MODE != 'HW' )) {
+    console.log(`Error reading ".env" file. Run this command from the top-most project folder. Aborting....`);
+    process.exit();
+  } else if (process.env.SGX_MODE == 'HW') {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 function pullImages(hwMode) {
   // Should Get/Compute the actual sizes of those images
   inquirer.prompt(questions.size).then(async function(answer) {
@@ -166,14 +179,8 @@ async function stop() {
 }
 
 argv
-  .command('init', 'Initialize Enigma Protocol Discovery development environment', () => {}, () => {
+  .command('init', 'Initialize Enigma Discovery development environment', () => {}, () => {
     init();
-  })
-  .command('start', 'Launch the Discovery Docker network', () => {}, () => {
-    start();
-  })
-  .command('stop', 'Stop the network by stopping and removing all containers', () => {}, () => {
-    stop();
   })
   .command('compile', 'Compile Secret Contracts and Smart Contracts', () => {}, () => {
     deps.compile();
@@ -181,5 +188,16 @@ argv
   .command('migrate', 'Migrate Secret Contracts and Smart Contracts', () => {}, () => {
     migrate.migrate();
   })
+  .command('pull', 'Pull the latest images for the containers in the network', () => {}, () => {
+    pullImages(getHWMode());
+  })
+  .command('start', 'Launch the Discovery Docker network', () => {}, () => {
+    start();
+  })
+  .command('stop', 'Stop the network by stopping and removing all containers', () => {}, () => {
+    stop();
+  })
+
+
   .demandCommand(1)
   .argv
