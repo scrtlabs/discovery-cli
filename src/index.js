@@ -7,6 +7,7 @@ const axios = require('axios');
 const chalk = require('chalk');
 const figlet = require('figlet');
 const inquirer = require('inquirer');
+const {spawn} = require('child_process');
 const compose = require('docker-compose');
 
 const deps = require('./deps');
@@ -16,13 +17,33 @@ const constants = require('./constants');
 const questions = require('./questions');
 
 
+function spawnProcess(cmd, args){
+  const p = spawn(cmd, args);
+
+  p.stdout.on('data', (data) => {
+    process.stdout.write(data.toString('utf-8'));
+  });
+
+  p.stderr.on('data', (data) => {
+    process.stderr.write(data.toString('utf-8'));
+  });
+
+  p.on('close', (code) => {
+    console.log(`child process exited with code ${code}`);
+  });
+}
+
 function downloadFiles() {
   axios.all([
     axios.get(constants.URL.DOCKER_COMPOSE_HW),
     axios.get(constants.URL.DOCKER_COMPOSE_SW),
     axios.get(constants.URL.CARGO_TOML),
-    axios.get(constants.URL.SAMPLE_CONTRACT)
-  ]).then(axios.spread((response1, response2, response3, response4) => {
+    axios.get(constants.URL.SAMPLE_SECRET_CONTRACT),
+    axios.get(constants.URL.SAMPLE_SMART_CONTRACT),
+    axios.get(constants.URL.MIGRATIONS_CONTRACT),
+    axios.get(constants.URL.INITIAL_MIGRATION),
+    axios.get(constants.URL.DEPLOY_CONTRACTS)
+  ]).then(axios.spread((response1, response2, response3, response4, response5, response6, r7, r8) => {
       fs.writeFileSync(constants.FILE.DOCKER_COMPOSE_HW, response1.data);
       fs.writeFileSync(constants.FILE.DOCKER_COMPOSE_SW, response2.data);
       fs.writeFileSync(`${constants.FOLDER.SECRET_CONTRACTS}/${constants.FILE.CARGO_TOML}.template`, response3.data);
@@ -31,6 +52,11 @@ function downloadFiles() {
         fs.mkdirSync(path.join(sampleContractFolder,'src'), {recursive: true});
       }
       fs.writeFileSync(path.join(sampleContractFolder,'src/lib.rs'), response4.data);
+      fs.writeFileSync(path.join(sampleContractFolder, constants.FILE.CARGO_TOML), response3.data);
+      fs.writeFileSync(path.join(constants.FOLDER.SMART_CONTRACTS, constants.FILE.SAMPLE_SMART_CONTRACT), response5.data);
+      fs.writeFileSync(path.join(constants.FOLDER.SMART_CONTRACTS, constants.FILE.MIGRATIONS_CONTRACT), response6.data);
+      fs.writeFileSync(path.join(constants.FOLDER.MIGRATIONS, constants.FILE.INITIAL_MIGRATION), r7.data);
+      fs.writeFileSync(path.join(constants.FOLDER.MIGRATIONS, constants.FILE.DEPLOY_CONTRACTS), r8.data);
     }))
     .catch(error => {
       console.log(error);
@@ -44,16 +70,19 @@ function createFolders() {
   if (!fs.existsSync(constants.FOLDER.SECRET_CONTRACTS)){
     fs.mkdirSync(constants.FOLDER.SECRET_CONTRACTS);
   }
-  if (!fs.existsSync(constants.FOLDER.BUILD)){
-    fs.mkdirSync(constants.FOLDER.BUILD);
-  }
   if (!fs.existsSync(path.join(constants.FOLDER.BUILD, constants.FOLDER.SMART_CONTRACTS))){
-    fs.mkdirSync(path.join(constants.FOLDER.BUILD, constants.FOLDER.SMART_CONTRACTS));
+    fs.mkdirSync(path.join(constants.FOLDER.BUILD, constants.FOLDER.SMART_CONTRACTS), {recursive: true});
+  }
+  if (!fs.existsSync(path.join(constants.FOLDER.BUILD, constants.FOLDER.ENIGMA_CONTRACTS))){
+    fs.mkdirSync(path.join(constants.FOLDER.BUILD, constants.FOLDER.ENIGMA_CONTRACTS), {recursive: true});
+  }
+  if (!fs.existsSync(constants.FOLDER.MIGRATIONS)){
+    fs.mkdirSync(constants.FOLDER.MIGRATIONS);
   }
 }
 
 function contentsEnvFile(mode) {
-  const folder = path.join(process.cwd(), constants.FOLDER.BUILD, constants.FOLDER.SMART_CONTRACTS);
+  const folder = path.join(process.cwd(), constants.FOLDER.BUILD, constants.FOLDER.ENIGMA_CONTRACTS);
   return `COMPOSE_PROJECT_NAME=enigma\nSGX_MODE=${mode}\nBUILD_CONTRACTS_PATH=${folder}`;
 }
 
@@ -123,13 +152,7 @@ function start() {
       await stop();
     }
     console.log('Starting Enigma Network...');
-    compose.upAll({ cwd: process.cwd(), log: true })
-    .then(
-      async () => {
-        compose.logs(constants.SERVICES, {cwd: process.cwd(), log: true, follow: true});
-      },
-      err => { console.log('something went wrong:', err.message)}
-    );
+    spawnProcess('docker-compose', ['up']);
   });
 }
 

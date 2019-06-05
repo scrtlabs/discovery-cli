@@ -3,6 +3,7 @@ const path = require('path');
 const hasbin = require('hasbin');
 const constants = require('./constants');
 const childProcess = require('child_process');
+const truffleCompile = require("truffle-workflow-compile");
 
 async function execBinary(command, args, options) {
   return new Promise((resolve, reject) => {
@@ -111,25 +112,28 @@ module.exports.checkDependencies = async function() {
 }
 
 module.exports.compile = async function() {
-  console.log('Compiling Secret Contracts...');
-  const folder =path.join(module.exports.findBasePath(), constants.FOLDER.SECRET_CONTRACTS);
-  const secretContracts = fs.readdirSync(folder, {withFileTypes: true}).filter(f => f.isDirectory()).map(f => f.name);
-  const parentFolder = path.normalize(path.join(folder, '..'));
-  const buildFolder = path.join(parentFolder, constants.FOLDER.BUILD);
-  const buildFolderSC = path.join(parentFolder, constants.FOLDER.BUILD, constants.FOLDER.SECRET_CONTRACTS);
-  if (!fs.existsSync(buildFolder)){
-    fs.mkdirSync(buildFolder);
-  }
+  const baseFolder = module.exports.findBasePath();
+  const truffleConfig = {
+    contracts_directory: path.join(baseFolder, constants.FOLDER.SMART_CONTRACTS),
+    contracts_build_directory: path.join(baseFolder, constants.FOLDER.BUILD, constants.FOLDER.SMART_CONTRACTS)
+  };
+  process.stdout.write('Smart Contracts:');
+  await truffleCompile.compile(truffleConfig)
+
+  const folderSC = path.join(baseFolder, constants.FOLDER.SECRET_CONTRACTS);
+  const secretContracts = fs.readdirSync(folderSC, {withFileTypes: true}).filter(f => f.isDirectory()).map(f => f.name);
+  const buildFolderSC = path.join(baseFolder, constants.FOLDER.BUILD, constants.FOLDER.SECRET_CONTRACTS);
   if (!fs.existsSync(buildFolderSC)){
-    fs.mkdirSync(buildFolderSC);
+    fs.mkdirSync(buildFolderSC, {recursive: true});
   }
   for(let i in secretContracts) {
+    console.log(`Compiling Secret Contract "${secretContracts[i]}"...`)
     let result = await execBinary('cargo', [`+${constants.RUST_NIGHTLY}`, 'build', '--release', '--target', 'wasm32-unknown-unknown'],
-      {cwd: path.join(folder, secretContracts[i]), log: true});
+      {cwd: path.join(folderSC, secretContracts[i]), log: true});
     if(result.exitCode){
       console.log(`Something went wrong compiling secret contract ${secretContracts[i]}, aborting.`)
     }
-    fs.copyFileSync(path.join(folder, secretContracts[i], constants.FOLDER.CONTRACT_PATH, 'contract.wasm'),
+    fs.copyFileSync(path.join(folderSC, secretContracts[i], constants.FOLDER.CONTRACT_PATH, 'contract.wasm'),
       path.join(buildFolderSC, `${secretContracts[i]}.wasm`))
   }
 }
