@@ -42,8 +42,9 @@ function downloadFiles() {
     axios.get(constants.URL.SAMPLE_SMART_CONTRACT),
     axios.get(constants.URL.MIGRATIONS_CONTRACT),
     axios.get(constants.URL.INITIAL_MIGRATION),
-    axios.get(constants.URL.DEPLOY_CONTRACTS)
-  ]).then(axios.spread((response1, response2, response3, response4, response5, response6, r7, r8) => {
+    axios.get(constants.URL.DEPLOY_CONTRACTS),
+    axios.get(constants.URL.TRUFFLE_JS)
+  ]).then(axios.spread((response1, response2, response3, response4, response5, response6, r7, r8, r9) => {
       fs.writeFileSync(constants.FILE.DOCKER_COMPOSE_HW, response1.data);
       fs.writeFileSync(constants.FILE.DOCKER_COMPOSE_SW, response2.data);
       fs.writeFileSync(`${constants.FOLDER.SECRET_CONTRACTS}/${constants.FILE.CARGO_TOML}.template`, response3.data);
@@ -57,6 +58,7 @@ function downloadFiles() {
       fs.writeFileSync(path.join(constants.FOLDER.SMART_CONTRACTS, constants.FILE.MIGRATIONS_CONTRACT), response6.data);
       fs.writeFileSync(path.join(constants.FOLDER.MIGRATIONS, constants.FILE.INITIAL_MIGRATION), r7.data);
       fs.writeFileSync(path.join(constants.FOLDER.MIGRATIONS, constants.FILE.DEPLOY_CONTRACTS), r8.data);
+      fs.writeFileSync(path.join(constants.FILE.TRUFFLE_JS), r9.data);
     }))
     .catch(error => {
       console.log(error);
