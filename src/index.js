@@ -167,16 +167,16 @@ argv
   .command('init', 'Initialize Enigma Protocol Discovery development environment', () => {}, () => {
     init();
   })
-  .command('start', 'Launch the the Discovery Docker network', () => {}, () => {
+  .command('start', 'Launch the Discovery Docker network', () => {}, () => {
     start();
   })
   .command('stop', 'Stop the network by stopping and removing all containers', () => {}, () => {
     stop();
   })
-  .command('compile', 'Compile Secret Contracts', () => {}, () => {
+  .command('compile', 'Compile Secret Contracts and Smart Contracts', () => {}, () => {
     deps.compile();
   })
-  .command('migrate', 'Migrate Secret Contracts', () => {}, () => {
+  .command('migrate', 'Migrate Secret Contracts and Smart Contracts', () => {}, () => {
     migrate.migrate();
   })
   .demandCommand(1)
