@@ -18,8 +18,8 @@ const constants = require('./constants');
 const questions = require('./questions');
 
 
-function spawnProcess(cmd, args){
-  const p = spawn(cmd, args);
+function spawnProcess(cmd, args, options){
+  const p = spawn(cmd, args, options);
 
   p.stdout.on('data', (data) => {
     process.stdout.write(data.toString('utf-8'));
@@ -159,7 +159,8 @@ function init() {
 }
 
 function start() {
-  compose.ps({})
+  const baseFolder = deps.findBasePath();
+  compose.ps({cwd: baseFolder})
   .then( async (output) => {
     let myReg = new RegExp(Object.keys(constants.SERVICE).map((key) => {return `${constants.SERVICE[key]}_1`}).join('|'))
     if(output.out.match(myReg)){
@@ -167,12 +168,13 @@ function start() {
       await stop();
     }
     console.log('Starting Enigma Network...');
-    spawnProcess('docker-compose', ['up']);
+    spawnProcess('docker-compose', ['up'], {cwd: baseFolder});
   });
 }
 
 async function stop() {
-  return compose.down({ cwd: process.cwd(), log: true })
+  const baseFolder = deps.findBasePath();
+  return compose.down({ cwd: baseFolder, log: true })
   .then(
     err => { if(err.message){ console.log('something went wrong:', err.message)}}
   );
