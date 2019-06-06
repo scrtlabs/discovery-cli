@@ -110,7 +110,8 @@ function swhwMode() {
 }
 
 function getHWMode(){
-  dotenv.config();
+  const baseFolder = deps.findBasePath();
+  dotenv.config({path: path.resolve(baseFolder, '.env')});
   if(typeof process.env.SGX_MODE === 'undefined' || (process.env.SGX_MODE != 'SW' && process.env.SGX_MODE != 'HW' )) {
     console.log(`Error reading ".env" file. Run this command from the top-most project folder. Aborting....`);
     process.exit();
