@@ -29,6 +29,7 @@ module.exports.FILE = {
   DEPLOY_CONTRACTS: '2_deploy_contracts.js',
   TRUFFLE_JS: 'truffle.js',
   TEST_CONTRACT: 'test_simple_addition.js',
+  PACKAGE_JSON: 'package.json',
 }
 
 module.exports.FOLDER = {
@@ -57,6 +58,7 @@ module.exports.URL = {
   DEPLOY_CONTRACTS: `${RAWGIT_CLI}config/` + module.exports.FILE.DEPLOY_CONTRACTS,
   TRUFFLE_JS: `${RAWGIT_CLI}config/` + module.exports.FILE.TRUFFLE_JS,
   TEST_CONTRACT: `${RAWGIT_CLI}config/` + module.exports.FILE.TEST_CONTRACT,
+  PACKAGE_JSON: `${RAWGIT_CLI}config/` + module.exports.FILE.PACKAGE_JSON,
 }
 
 module.exports.DOCKER = {
@@ -89,5 +91,5 @@ Object.keys(module.exports.SERVICE).forEach(function(key){
 module.exports.SERVICES = services;
 
 module.exports.ENCODING = 'utf-8';
-module.exports.DEPENDENCIES = ['docker', 'docker-compose', 'rustc', 'cargo', 'rustup'];
+module.exports.DEPENDENCIES = ['docker', 'docker-compose', 'rustc', 'cargo', 'rustup', 'npm'];
 module.exports.RUST_NIGHTLY = 'nightly-2019-05-20';
