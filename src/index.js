@@ -19,6 +19,7 @@ const questions = require('./questions');
 
 
 function spawnProcess(cmd, args, options){
+
   const p = spawn(cmd, args, options);
 
   p.stdout.on('data', (data) => {
@@ -29,13 +30,29 @@ function spawnProcess(cmd, args, options){
     process.stderr.write(data.toString('utf-8'));
   });
 
-  p.on('close', (code) => {
-    console.log(`child process exited with code ${code}`);
-  });
+  const promise = new Promise((resolve, reject) => {
+    p.on('error', reject);
+
+    p.on('exit', code => {
+      if (code === 0) {
+        resolve()
+      } else {
+        const err = new Error(`child exited with code ${code}`)
+        err.code = code
+        reject(err)
+      }
+    })
+  })
+
+  promise.child = p;
+
+  return promise;
+
 }
 
-function downloadFiles() {
-  axios.all([
+async function downloadFiles() {
+  console.log('Downloading files...')
+  await axios.all([
     axios.get(constants.URL.DOCKER_COMPOSE_HW),
     axios.get(constants.URL.DOCKER_COMPOSE_SW),
     axios.get(constants.URL.CARGO_TOML),
@@ -45,8 +62,9 @@ function downloadFiles() {
     axios.get(constants.URL.INITIAL_MIGRATION),
     axios.get(constants.URL.DEPLOY_CONTRACTS),
     axios.get(constants.URL.TRUFFLE_JS),
+    axios.get(constants.URL.TEST_CONTRACT),
     axios.get(constants.URL.PACKAGE_JSON),
-  ]).then(axios.spread((r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11) => {
+  ]).then(axios.spread(async (r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11) => {
       fs.writeFileSync(constants.FILE.DOCKER_COMPOSE_HW, r1.data);
       fs.writeFileSync(constants.FILE.DOCKER_COMPOSE_SW, r2.data);
       fs.writeFileSync(`${constants.FOLDER.SECRET_CONTRACTS}/${constants.FILE.CARGO_TOML}.template`, r3.data);
@@ -62,8 +80,9 @@ function downloadFiles() {
       fs.writeFileSync(path.join(constants.FOLDER.MIGRATIONS, constants.FILE.DEPLOY_CONTRACTS), r8.data);
       fs.writeFileSync(constants.FILE.TRUFFLE_JS, r9.data);
       fs.writeFileSync(path.join(constants.FOLDER.TEST, constants.FILE.TEST_CONTRACT), r10.data)
-      fs.writeFileSync(constants.FILE.PACKAGE_JSON, r11.data)
-      spawnProcess('npm', ['install']);
+      fs.writeFileSync(constants.FILE.PACKAGE_JSON, JSON.stringify(r11.data));
+      console.log('Installing package dependendecies...')
+      await spawnProcess('npm', ['install']);
     }))
     .catch(error => {
       console.log(error);
@@ -161,7 +180,7 @@ function init() {
     }
     await deps.checkDependencies();
     createFolders();
-    downloadFiles();
+    await downloadFiles();
     swhwMode();
   });
 }

@@ -68,7 +68,6 @@ async function installRustTarget() {
     console.log(result.err)
     process.exit();
   }
-  console.log('Done.');
 }
 
 module.exports.findBasePath = function(){

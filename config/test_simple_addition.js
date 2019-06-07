@@ -20,8 +20,6 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-console.log(process.cwd());
-
 let enigma = null;
 
 contract("Sample", accounts => {
