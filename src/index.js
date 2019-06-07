@@ -13,7 +13,7 @@ const compose = require('docker-compose');
 
 const deps = require('./deps');
 const docker = require('./docker');
-const migrate = require('./migrate');
+const contracts = require('./contracts');
 const constants = require('./constants');
 const questions = require('./questions');
 
@@ -45,21 +45,22 @@ function downloadFiles() {
     axios.get(constants.URL.INITIAL_MIGRATION),
     axios.get(constants.URL.DEPLOY_CONTRACTS),
     axios.get(constants.URL.TRUFFLE_JS)
-  ]).then(axios.spread((response1, response2, response3, response4, response5, response6, r7, r8, r9) => {
-      fs.writeFileSync(constants.FILE.DOCKER_COMPOSE_HW, response1.data);
-      fs.writeFileSync(constants.FILE.DOCKER_COMPOSE_SW, response2.data);
-      fs.writeFileSync(`${constants.FOLDER.SECRET_CONTRACTS}/${constants.FILE.CARGO_TOML}.template`, response3.data);
+  ]).then(axios.spread((r1, r2, r3, r4, r5, r6, r7, r8, r9, r10) => {
+      fs.writeFileSync(constants.FILE.DOCKER_COMPOSE_HW, r1.data);
+      fs.writeFileSync(constants.FILE.DOCKER_COMPOSE_SW, r2.data);
+      fs.writeFileSync(`${constants.FOLDER.SECRET_CONTRACTS}/${constants.FILE.CARGO_TOML}.template`, r3.data);
       let sampleContractFolder = path.join(constants.FOLDER.SECRET_CONTRACTS, constants.FOLDER.SAMPLE_CONTRACT);
       if (!fs.existsSync(sampleContractFolder)) {
         fs.mkdirSync(path.join(sampleContractFolder,'src'), {recursive: true});
       }
-      fs.writeFileSync(path.join(sampleContractFolder,'src/lib.rs'), response4.data);
-      fs.writeFileSync(path.join(sampleContractFolder, constants.FILE.CARGO_TOML), response3.data);
-      fs.writeFileSync(path.join(constants.FOLDER.SMART_CONTRACTS, constants.FILE.SAMPLE_SMART_CONTRACT), response5.data);
-      fs.writeFileSync(path.join(constants.FOLDER.SMART_CONTRACTS, constants.FILE.MIGRATIONS_CONTRACT), response6.data);
+      fs.writeFileSync(path.join(sampleContractFolder,'src/lib.rs'), r4.data);
+      fs.writeFileSync(path.join(sampleContractFolder, constants.FILE.CARGO_TOML), r3.data);
+      fs.writeFileSync(path.join(constants.FOLDER.SMART_CONTRACTS, constants.FILE.SAMPLE_SMART_CONTRACT), r5.data);
+      fs.writeFileSync(path.join(constants.FOLDER.SMART_CONTRACTS, constants.FILE.MIGRATIONS_CONTRACT), r6.data);
       fs.writeFileSync(path.join(constants.FOLDER.MIGRATIONS, constants.FILE.INITIAL_MIGRATION), r7.data);
       fs.writeFileSync(path.join(constants.FOLDER.MIGRATIONS, constants.FILE.DEPLOY_CONTRACTS), r8.data);
-      fs.writeFileSync(path.join(constants.FILE.TRUFFLE_JS), r9.data);
+      fs.writeFileSync(constants.FILE.TRUFFLE_JS, r9.data);
+      fs.writeFileSync(path.join(constants.FOLDER.TEST, constants.FILE.TEST_CONTRACT), r10.data)
     }))
     .catch(error => {
       console.log(error);
@@ -81,6 +82,9 @@ function createFolders() {
   }
   if (!fs.existsSync(constants.FOLDER.MIGRATIONS)){
     fs.mkdirSync(constants.FOLDER.MIGRATIONS);
+  }
+  if (!fs.existsSync(constants.FOLDER.TEST)){
+    fs.mkdirSync(constants.FOLDER.TEST);
   }
 }
 
@@ -189,7 +193,7 @@ argv
     deps.compile();
   })
   .command('migrate', 'Migrate Secret Contracts and Smart Contracts', () => {}, () => {
-    migrate.migrate();
+    contracts.migrate();
   })
   .command('pull', 'Pull the latest images for the containers in the network', () => {}, () => {
     pullImages(getHWMode());
@@ -200,7 +204,8 @@ argv
   .command('stop', 'Stop the network by stopping and removing all containers', () => {}, () => {
     stop();
   })
-
-
+  .command('test', 'Test Secret Contracts and Smart Contracts', () => {}, () => {
+    contracts.test();
+  })
   .demandCommand(1)
   .argv

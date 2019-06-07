@@ -1,6 +1,6 @@
+const CLI = require('clui');
 const {Docker} = require('node-docker-api');
 const getCursorPosition = require('get-cursor-position');
-const CLI = require('clui');
 
 const docker = new Docker({ socketPath: '/var/run/docker.sock' })
 

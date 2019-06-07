@@ -28,6 +28,7 @@ module.exports.FILE = {
   INITIAL_MIGRATION: '1_initial_migration.js',
   DEPLOY_CONTRACTS: '2_deploy_contracts.js',
   TRUFFLE_JS: 'truffle.js',
+  TEST_CONTRACT: 'test_simple_addition.js',
 }
 
 module.exports.FOLDER = {
@@ -55,6 +56,7 @@ module.exports.URL = {
   INITIAL_MIGRATION: `${RAWGIT_CONTRACT}migrations/` + module.exports.FILE.INITIAL_MIGRATION,
   DEPLOY_CONTRACTS: `${RAWGIT_CLI}config/` + module.exports.FILE.DEPLOY_CONTRACTS,
   TRUFFLE_JS: `${RAWGIT_CLI}config/` + module.exports.FILE.TRUFFLE_JS,
+  TEST_CONTRACT: `${RAWGIT_CLI}config/` + module.exports.FILE.TEST_CONTRACT,
 }
 
 module.exports.DOCKER = {
