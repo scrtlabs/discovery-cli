@@ -56,6 +56,13 @@ async function deploySecretContract(config){
   // Verify deployed contract
   var result = await enigma.admin.isDeployed(scTask.scAddr);
   if(result) {
+
+    fs.writeFile(path.join('../test/',config.filename.replace(/\.wasm$/, '.txt')), scTask.scAddr, 'utf8', function(err) {
+      if(err) {
+        return console.log(err);
+      }
+    });
+
     return scTask.scAddr;
   } else {
     console.log('Something went wrong deploying Secret Contract "${contract}", aborting');

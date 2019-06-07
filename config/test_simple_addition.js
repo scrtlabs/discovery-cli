@@ -47,7 +47,7 @@ contract("Sample", accounts => {
     ];
     let taskGasLimit = 100000;
     let taskGasPx = utils.toGrains(1);
-    const contractAddr = fs.readFileSync(path.join('test/simple_addition.txt'), 'utf-8');
+    const contractAddr = fs.readFileSync('test/simple_addition.txt', 'utf-8');
     task = await new Promise((resolve, reject) => {
       enigma.computeTask(taskFn, taskArgs, taskGasLimit, taskGasPx, accounts[0], contractAddr)
         .on(eeConstants.SEND_TASK_INPUT_RESULT, (result) => resolve(result))

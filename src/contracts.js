@@ -11,6 +11,8 @@ const constants = require('./constants');
 
 async function prepTruffle(){
   const baseFolder = deps.findBasePath();
+  process.chdir(baseFolder);
+
   const network = 'development';
   const config = TruffleConfig.detect({network: network});
   config.contracts_build_directory = path.join(baseFolder, constants.FOLDER.BUILD, constants.FOLDER.SMART_CONTRACTS);
