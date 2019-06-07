@@ -17,6 +17,7 @@ Commands:
   discovery pull     Pull the latest images for the containers in the network
   discovery start    Launch the Discovery Docker network
   discovery stop     Stop the network by stopping and removing all containers
+  discovery test     Test Secret Contracts and Smart Contracts
 
 Options:
   --help     Show help                                                 [boolean]
