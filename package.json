@@ -17,7 +17,6 @@
     "docker-compose": "^0.17.4",
     "dotenv": "^8.0.0",
     "enigma-js": "^0.0.5",
-    "figlet": "^1.2.3",
     "get-cursor-position": "^1.0.5",
     "hasbin": "^1.2.3",
     "inquirer": "^6.3.1",

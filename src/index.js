@@ -5,7 +5,6 @@ const path = require('path');
 const argv = require('yargs');
 const axios = require('axios');
 const chalk = require('chalk');
-const figlet = require('figlet');
 const dotenv = require('dotenv');
 const inquirer = require('inquirer');
 const {spawn} = require('child_process');
@@ -168,9 +167,44 @@ function pullImages(hwMode) {
 }
 
 function init() {
+  const e = '    ______      _                               \n   / ____/___  (_)___ _____ ___  ____ _         \n  / __/ / __ \\/ / __ `/ __ `__ \\/ __ `/         \n / /___/ / / / / /_/ / / / / / / /_/ /          \n/_____/_/ /_/_/\\__, /_/ /_/ /_/\\__,_/           \n              /____/                            \n    ____             __                   __    \n   / __ \\_________  / /_____  _________  / /    \n  / /_/ / ___/ __ \\/ __/ __ \\/ ___/ __ \\/ /     \n / ____/ /  / /_/ / /_/ /_/ / /__/ /_/ / /      \n/_/   /_/   \\____/\\__/\\____/\\___/\\____/_/       \n                                                \n    ____  _                                     \n   / __ \\(_)_____________ _   _____  _______  __\n  / / / / / ___/ ___/ __ \\ | / / _ \\/ ___/ / / /\n / /_/ / (__  ) /__/ /_/ / |/ /  __/ /  / /_/ / \n/_____/_/____/\\___/\\____/|___/\\___/_/   \\__, /  \n                                       /____/   ';
+  const ae = e.split('\n');
+  const l = `                        .:.             
+                    .::::-:/:.          
+                .:::-       .:/:.       
+            .:::-      .-      .//:     
+        .:::-          :          .//:  
+      /o:           -::/-           -/s 
+     -/ ://.    -:::.   -//.    -:::.-/ 
+     +     :/+/:.          :o/::.    +  
+    /-      /-:/:.      -:::/.      /-  
+   .+      .+   .:/:-:::.  ./      .+   
+   +.      +.      +.      /.      +.  
+  -:      -/      -/      -:      -/   
+  +     - :/:     +    .:::-.     +    
+ /-. .-     .//- /-.:::-     -.. /-   
+ o.-           -/o:-           ::/     
+  ://.          +.         -:::-       
+     ://.      -/      -:::.           
+       .:/:.   +   -:::.               
+          .:/://:::.                  
+             .:.                   `;
+  const al = l.split(`\n`);
+  const offset=1;
+  output = '';
+  for(let i=0; i<al.length; i++){
+    if(i>= offset && i < ae.length+offset){
+      output += ae[i-offset];
+    } else {
+      output += '                                                 ';
+    }
+    output += '   ';
+    output += al[i]+'\n';
+  }
+
   console.log(
     chalk.cyan(
-      figlet.textSync('Discovery', { horizontalLayout: 'full' })
+      output
     )
   );
 
