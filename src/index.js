@@ -169,7 +169,7 @@ function pullImages(hwMode) {
 
 function init() {
   console.log(
-    chalk.blue(
+    chalk.cyan(
       figlet.textSync('Discovery', { horizontalLayout: 'full' })
     )
   );
