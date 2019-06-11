@@ -1,5 +1,5 @@
 # discovery-cli
-Command Line Interface (CLI) for the Discovery Enigma Protocol development environment
+Command Line Interface (CLI) for the Discovery Enigma Protocol developer testnet.
 
 ## Requirements
 
