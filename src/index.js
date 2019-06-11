@@ -6,6 +6,7 @@ const argv = require('yargs');
 const axios = require('axios');
 const chalk = require('chalk');
 const dotenv = require('dotenv');
+const git = require('simple-git/promise');
 const inquirer = require('inquirer');
 const {spawn} = require('child_process');
 const compose = require('docker-compose');
@@ -81,6 +82,9 @@ async function downloadFiles() {
       fs.writeFileSync(path.join(constants.FOLDER.TEST, constants.FILE.TEST_CONTRACT), r10.data)
       fs.writeFileSync(constants.FILE.PACKAGE_JSON, JSON.stringify(r11.data));
       console.log('Installing package dependendecies...')
+      await git().clone(constants.URL.GIT_CLIENT, constants.FOLDER.CLIENT)
+        .catch((err) => {console.log(err); process.exit(1);});
+      await spawnProcess('npm', ['install'], {cwd: constants.FOLDER.CLIENT});
       await spawnProcess('npm', ['install']);
     }))
     .catch(error => {
@@ -106,6 +110,9 @@ function createFolders() {
   }
   if (!fs.existsSync(constants.FOLDER.TEST)){
     fs.mkdirSync(constants.FOLDER.TEST);
+  }
+  if (!fs.existsSync(constants.FOLDER.CLIENT)){
+    fs.mkdirSync(constants.FOLDER.CLIENT);
   }
 }
 

@@ -38,6 +38,7 @@ module.exports.FOLDER = {
   ENIGMA_CONTRACTS: 'enigma_contracts',
   TEST: 'test',
   BUILD: 'build',
+  CLIENT: 'client',
   CONTRACT_PATH: 'target/wasm32-unknown-unknown/release/',
   SAMPLE_CONTRACT: 'simple_addition',
   MIGRATIONS: 'migrations',
@@ -59,6 +60,7 @@ module.exports.URL = {
   TRUFFLE_JS: `${RAWGIT_CLI}config/` + module.exports.FILE.TRUFFLE_JS,
   TEST_CONTRACT: `${RAWGIT_CLI}config/` + module.exports.FILE.TEST_CONTRACT,
   PACKAGE_JSON: `${RAWGIT_CLI}config/` + module.exports.FILE.PACKAGE_JSON,
+  GIT_CLIENT: 'https://github.com/enigmampc/discovery-template-dapp.git',
 }
 
 module.exports.DOCKER = {
@@ -91,5 +93,5 @@ Object.keys(module.exports.SERVICE).forEach(function(key){
 module.exports.SERVICES = services;
 
 module.exports.ENCODING = 'utf-8';
-module.exports.DEPENDENCIES = ['docker', 'docker-compose', 'rustc', 'cargo', 'rustup', 'npm'];
+module.exports.DEPENDENCIES = ['docker', 'docker-compose', 'rustc', 'cargo', 'rustup', 'npm', 'git'];
 module.exports.RUST_NIGHTLY = 'nightly-2019-05-20';
