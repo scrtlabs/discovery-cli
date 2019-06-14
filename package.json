@@ -1,6 +1,6 @@
 {
   "name": "@enigmampc/discovery-cli",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "A command-line interface for the Enigma Protocol developer environment",
   "main": "src/index.js",
   "scripts": {
@@ -11,7 +11,7 @@
   "author": "Enigma Team <info@enigma.co>",
   "license": "AGPL-3.0-or-later",
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "chalk": "^2.4.2",
     "clui": "^0.3.6",
     "docker-compose": "^0.17.4",
