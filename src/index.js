@@ -118,7 +118,7 @@ function createFolders() {
 
 function contentsEnvFile(mode) {
   const folder = path.join(process.cwd(), constants.FOLDER.BUILD, constants.FOLDER.ENIGMA_CONTRACTS);
-  return `COMPOSE_PROJECT_NAME=enigma\nSGX_MODE=${mode}\nBUILD_CONTRACTS_PATH=${folder}`;
+  return `COMPOSE_PROJECT_NAME=enigma\nSGX_MODE=${mode}\nBUILD_CONTRACTS_PATH=${folder}\nDOCKER_TAG=latest`;
 }
 
 function swhwMode() {
@@ -142,8 +142,7 @@ function swhwMode() {
 }
 
 function getHWMode(){
-  const baseFolder = deps.findBasePath();
-  dotenv.config({path: path.resolve(baseFolder, '.env')});
+  dotenv.config({path: path.resolve(deps.findBasePath(), '.env')});
   if(typeof process.env.SGX_MODE === 'undefined' || (process.env.SGX_MODE != 'SW' && process.env.SGX_MODE != 'HW' )) {
     console.log(`Error reading ".env" file. Run this command from the top-most project folder. Aborting....`);
     process.exit();
@@ -160,15 +159,24 @@ function pullImages(hwMode) {
     if(answer.size === 'n' | answer.size === 'N'){
       process.exit()
     }
-    console.log('Pulling Enigma Docker images...')
-    await docker.pullImage(constants.DOCKER.P2P, 'latest');
-    await docker.pullImage(constants.DOCKER.CONTRACT, 'latest');
-    if(hwMode){
-      await docker.pullImage(constants.DOCKER.KM_HW, 'latest');
-      await docker.pullImage(constants.DOCKER.CORE_HW, 'latest');
+
+    dotenv.config({path: path.resolve(deps.findBasePath(), '.env')});
+    let dockerTag;
+    if (typeof process.env.DOCKER_TAG !== 'undefined' && process.env.DOCKER_TAG == 'develop') {
+      dockerTag = 'develop';
     } else {
-      await docker.pullImage(constants.DOCKER.KM_SW, 'latest');
-      await docker.pullImage(constants.DOCKER.CORE_SW, 'latest');
+      dockerTag = 'latest';
+    }
+
+    console.log('Pulling Enigma Docker images...')
+    await docker.pullImage(constants.DOCKER.P2P, dockerTag);
+    await docker.pullImage(constants.DOCKER.CONTRACT, dockerTag);
+    if(hwMode){
+      await docker.pullImage(constants.DOCKER.KM_HW, dockerTag);
+      await docker.pullImage(constants.DOCKER.CORE_HW, dockerTag);
+    } else {
+      await docker.pullImage(constants.DOCKER.KM_SW, dockerTag);
+      await docker.pullImage(constants.DOCKER.CORE_SW, dockerTag);
     }
   });
 }
