@@ -122,8 +122,12 @@ module.exports.compile = async function() {
   const folderSC = path.join(baseFolder, constants.FOLDER.SECRET_CONTRACTS);
   const secretContracts = fs.readdirSync(folderSC, {withFileTypes: true}).filter(f => f.isDirectory()).map(f => f.name);
   const buildFolderSC = path.join(baseFolder, constants.FOLDER.BUILD, constants.FOLDER.SECRET_CONTRACTS);
+
+  if (!fs.existsSync(path.join(baseFolder, constants.FOLDER.BUILD))) {
+    fs.mkdirSync(path.join(baseFolder, constants.FOLDER.BUILD));
+  }
   if (!fs.existsSync(buildFolderSC)){
-    fs.mkdirSync(buildFolderSC, {recursive: true});
+    fs.mkdirSync(buildFolderSC);
   }
   for(let i in secretContracts) {
     console.log(`Compiling Secret Contract "${secretContracts[i]}"...`)
