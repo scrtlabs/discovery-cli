@@ -69,8 +69,8 @@ async function downloadFiles() {
       fs.writeFileSync(constants.FILE.DOCKER_COMPOSE_SW, r2.data);
       fs.writeFileSync(`${constants.FOLDER.SECRET_CONTRACTS}/${constants.FILE.CARGO_TOML}.template`, r3.data);
       let sampleContractFolder = path.join(constants.FOLDER.SECRET_CONTRACTS, constants.FOLDER.SAMPLE_CONTRACT);
-      if (!fs.existsSync(sampleContractFolder)) {
-        fs.mkdirSync(path.join(sampleContractFolder,'src'), {recursive: true});
+      if (!fs.existsSync(path.join(sampleContractFolder,'src'))) {
+        fs.mkdirSync(path.join(sampleContractFolder,'src'));
       }
       fs.writeFileSync(path.join(sampleContractFolder,'src/lib.rs'), r4.data);
       fs.writeFileSync(path.join(sampleContractFolder, constants.FILE.CARGO_TOML), r3.data);
@@ -99,11 +99,17 @@ function createFolders() {
   if (!fs.existsSync(constants.FOLDER.SECRET_CONTRACTS)){
     fs.mkdirSync(constants.FOLDER.SECRET_CONTRACTS);
   }
+  if (!fs.existsSync(path.join(constants.FOLDER.SECRET_CONTRACTS, constants.FOLDER.SAMPLE_CONTRACT))){
+    fs.mkdirSync(path.join(constants.FOLDER.SECRET_CONTRACTS, constants.FOLDER.SAMPLE_CONTRACT));
+  }
+  if (!fs.existsSync(constants.FOLDER.BUILD)){
+    fs.mkdirSync(path.join(constants.FOLDER.BUILD));
+  }
   if (!fs.existsSync(path.join(constants.FOLDER.BUILD, constants.FOLDER.SMART_CONTRACTS))){
-    fs.mkdirSync(path.join(constants.FOLDER.BUILD, constants.FOLDER.SMART_CONTRACTS), {recursive: true});
+    fs.mkdirSync(path.join(constants.FOLDER.BUILD, constants.FOLDER.SMART_CONTRACTS));
   }
   if (!fs.existsSync(path.join(constants.FOLDER.BUILD, constants.FOLDER.ENIGMA_CONTRACTS))){
-    fs.mkdirSync(path.join(constants.FOLDER.BUILD, constants.FOLDER.ENIGMA_CONTRACTS), {recursive: true});
+    fs.mkdirSync(path.join(constants.FOLDER.BUILD, constants.FOLDER.ENIGMA_CONTRACTS));
   }
   if (!fs.existsSync(constants.FOLDER.MIGRATIONS)){
     fs.mkdirSync(constants.FOLDER.MIGRATIONS);
