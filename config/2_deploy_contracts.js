@@ -57,7 +57,7 @@ async function deploySecretContract(config){
   var result = await enigma.admin.isDeployed(scTask.scAddr);
   if(result) {
 
-    fs.writeFile(path.join('../test/',config.filename.replace(/\.wasm$/, '.txt')), scTask.scAddr, 'utf8', function(err) {
+    fs.writeFile(path.resolve(migrationsFolder, '../test/', config.filename.replace(/\.wasm$/, '.txt')), scTask.scAddr, 'utf8', function(err) {
       if(err) {
         return console.log(err);
       }
