@@ -36,3 +36,43 @@ Options:
 ```
 npm remove -g @enigmampc/discovery-cli
 ```
+
+## How it works
+
+This repo provides an intuitive and user-friendly interface for dApp developers of secret contracts. It uses an analogous workflow and functionality to [Truffle Suite](https://www.trufflesuite.com/). In fact, it builds on truffle packages and adapts the existing workflow to incorporate the functinoality needed to compile, migrate and test secret contracts when having a running instance of the Engima network.
+
+For a detailed walkthrough guide on how to use this repo following a step-by-step example, refer to [Getting Started with Enigma: An Intro to Secret Contracts](https://blog.enigma.co/getting-started-with-enigma-an-intro-to-secret-contracts-cdba4fe501c2).
+
+What follows is more geared to advanced users that want to understand what happens under the hood:
+
+- `discovery init` calls [init()](https://github.com/enigmampc/discovery-cli/blob/549be1df4463e3a1248480b46498cd5e030dc1b8/src/index.js#L190) to initialize the folder structure and download the required files for any given project. Specifically:
+    - Checks that the following [list of dependecies](https://github.com/enigmampc/discovery-cli/blob/549be1df4463e3a1248480b46498cd5e030dc1b8/src/constants.js#L96) exist in the system.
+    - Creates the following directory structure:
+    ```
+    {your_project_folder}
+     |
+     ├-- build
+     |    ├-- enigma_contracts
+     |    └-- secret_contracts
+     ├-- client
+     ├-- migrations
+     ├-- smart_contracts
+     ├-- secret_contracts
+     |    └-- sample_contract
+     └-- test
+     ```
+     - Downloads the [required files](https://github.com/enigmampc/discovery-cli/blob/549be1df4463e3a1248480b46498cd5e030dc1b8/src/index.js#L53) populating the above folder structure
+     - Asks the user whether to run in SGX Hardware or Software mode, and configures it accordingly
+     - Pulls the required docker images from [enigmampc Docker Hub](https://hub.docker.com/u/enigmampc)
+
+- `discovery start` launches a dockerized version of the Discovery release of the Enigma network. This is the analogous command to `truffle develop` or `ganache-cli`. It is a more streamlined version of the [discovery-docker-network](https://github.com/enigmampc/discovery-docker-network) configured through either one of the following `docker-compose.yml` files: [hardware version](https://github.com/enigmampc/discovery-docker-network/blob/master/config/docker-compose.cli-hw.yml), [software version](https://github.com/enigmampc/discovery-docker-network/blob/master/config/docker-compose.cli-sw.yml). It exposes these two ports to the host: `9545` (Ganache/Truffle) and `3346` (Peer-to-Peer proxy: the client entry point to the P2P network). Make sure that these two ports are free and available on the host. Having this command running is a prerequisite to running `discovery compile`, `discovery migrate` and `discovery test`.
+
+- `discovery stop`is the countercommand to `discovery start` to properly shut down the network. It is automatically called before starting the network to ensure that it starts from a blank state every time.
+
+- `discovery pull` pulls the latest docker images for the network. It's a shortcut for `docker-compose pull`
+
+- `discovery compile` calls [deps/compile](https://github.com/enigmampc/discovery-cli/blob/549be1df4463e3a1248480b46498cd5e030dc1b8/src/deps.js#L113) which in turn calls first `truffle compile` and then executes Rust `cargo` to compile all secret contract to their WebAssembly format. Puts both sets of contracts under their respective subfolders under the `build` folder.
+
+- `discovery migrate` runs the migrations in the `migrations` folder. Specifically, the [2_deploy_contracts.js](https://github.com/enigmampc/discovery-cli/blob/master/config/2_deploy_contracts.js) file is a customized migration Javascript file that migrates both the Smart Contracts and Secret Contracts, following the Truffle specs.
+
+- `discovery test` run the tests in the `test` folder. Similarly as above, [test_simple_addition.js](https://github.com/enigmampc/discovery-cli/blob/master/config/test_simple_addition.js) is a customized Javascript test file that tests the sample `simple_addition` contract provided in this repo, following the Truffle specs.
