@@ -1,18 +1,8 @@
 # discovery-cli
 Command Line Interface (CLI) for the Discovery Enigma Protocol developer testnet.
 
-## Requirements
-
-- [Docker](https://docs.docker.com/install/)
-- [Docker Compose](https://docs.docker.com/compose/install/) version 1.23.2 or higher. Please be aware that docker-compose introduced a bug in 1.23.0 (also present in 1.23.1) that appended random strings to container names that causes this network configuration to break.
-- [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
-- [Node.js](https://nodejs.org/en/) (version 10 or higher): `node` and `npm`
-- [Rust](https://www.rust-lang.org/tools/install): `rustup`, `rustc` and `cargo`
-
 ## Installation
-```
-npm install -g @enigmampc/discovery-cli
-```
+[Installation instructions](doc/Installation.md)
 
 ## Usage
 ```
@@ -30,11 +20,6 @@ Commands:
 Options:
   --help     Show help                                                 [boolean]
   --version  Show version number                                       [boolean]
-```
-
-## Uninstall
-```
-npm remove -g @enigmampc/discovery-cli
 ```
 
 ## How it works
