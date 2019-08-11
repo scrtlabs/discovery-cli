@@ -23,7 +23,14 @@ npm install -g @enigmampc/discovery-cli
 Some of the `discovery-cli` dependencies require Python installation. 
 If `python` is not yet installed on your machine, you should add it. 
 
-## Uninstall
+## Missing docker group in Linux
+```
+Error: connect EACCES /var/run/docker.sock
+```
+
+Follow [these](https://docs.docker.com/install/linux/linux-postinstall/) instructions to create `docker` group and add your user.
+
+# Uninstall
 ```
 npm remove -g @enigmampc/discovery-cli
 ```
