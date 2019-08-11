@@ -34,7 +34,6 @@ async function deploySecretContract(config){
 
   try {
     preCode = fs.readFileSync(path.resolve(migrationsFolder, '../build/secret_contracts', config.filename));
-    preCode = preCode.toString('hex');
   } catch(e) {
     console.log('Error:', e.stack);
   }
