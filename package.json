@@ -1,6 +1,6 @@
 {
   "name": "@enigmampc/discovery-cli",
-  "version": "0.0.22",
+  "version": "0.0.24",
   "description": "A command-line interface for the Enigma Protocol developer environment",
   "main": "src/index.js",
   "scripts": {
@@ -16,7 +16,7 @@
     "clui": "^0.3.6",
     "docker-compose": "^0.17.4",
     "dotenv": "^8.0.0",
-    "enigma-js": "^0.0.5",
+    "enigma-js": "^0.0.7",
     "get-cursor-position": "^1.0.5",
     "hasbin": "^1.2.3",
     "inquirer": "^6.4.1",
