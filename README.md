@@ -17,7 +17,7 @@ Command Line Interface (CLI) for the Discovery Enigma Protocol developer testnet
 npm install -g @enigmampc/discovery-cli
 ```
 
-For detailed instructions on how to install all the required dependencies, see the [Installation instructions](doc/Installation.md)
+For detailed instructions on how to install all the required dependencies, see the [Installation instructions](docs/Installation.md)
 
 ## Usage
 ```
