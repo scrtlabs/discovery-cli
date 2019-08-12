@@ -10,9 +10,14 @@ Command Line Interface (CLI) for the Discovery Enigma Protocol developer testnet
 - [Rust](https://www.rust-lang.org/tools/install): `rustup`, `rustc` and `cargo`
 
 ## Installation
+
+`discovery-cli` should be installed as a global package:
+
 ```
 npm install -g @enigmampc/discovery-cli
 ```
+
+For detailed instructions on how to install all the required dependencies, see the [Installation instructions](docs/Installation.md)
 
 ## Usage
 ```
