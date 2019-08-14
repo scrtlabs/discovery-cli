@@ -44,7 +44,7 @@ npm remove -g @enigmampc/discovery-cli
 
 ## How it works
 
-This repo provides an intuitive and user-friendly interface for dApp developers of secret contracts. It uses an analogous workflow and functionality to [Truffle Suite](https://www.trufflesuite.com/). In fact, it builds on truffle packages and adapts the existing workflow to incorporate the functinoality needed to compile, migrate and test secret contracts when having a running instance of the Engima network.
+This repo provides an intuitive and user-friendly interface for dApp developers of secret contracts. It uses an analogous workflow and functionality to [Truffle Suite](https://www.trufflesuite.com/). In fact, it builds on truffle packages and adapts the existing workflow to incorporate the functionality needed to compile, migrate and test secret contracts when having a running instance of the Enigma network.
 
 For a detailed walkthrough guide on how to use this repo following a step-by-step example, refer to [Getting Started with Enigma: An Intro to Secret Contracts](https://blog.enigma.co/getting-started-with-enigma-an-intro-to-secret-contracts-cdba4fe501c2).
 
