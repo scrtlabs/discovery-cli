@@ -3,7 +3,7 @@ const path = require('path');
 const hasbin = require('hasbin');
 const constants = require('./constants');
 const childProcess = require('child_process');
-const truffleCompile = require("truffle-workflow-compile");
+const truffleCompile = require("@truffle/workflow-compile");
 
 async function execBinary(command, args, options) {
   return new Promise((resolve, reject) => {

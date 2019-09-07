@@ -1,11 +1,11 @@
 const fs = require('fs');
 const path = require('path');
 const Web3 = require('web3');
-const truffleMigrate = require('truffle-migrate');
-const truffleTest = require('truffle-core').test;
-const TruffleConfig = require("truffle-config");
-const Resolver = require("truffle-resolver");
-const Artifactor = require("truffle-artifactor");
+const truffleMigrate = require('@truffle/migrate');
+const truffleTest = require('@truffle/core').test;
+const TruffleConfig = require("@truffle/config");
+const Resolver = require("@truffle/resolver");
+const Artifactor = require("@truffle/artifactor");
 const deps = require('./deps');
 const constants = require('./constants');
 
