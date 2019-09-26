@@ -94,4 +94,4 @@ module.exports.SERVICES = services;
 
 module.exports.ENCODING = 'utf-8';
 module.exports.DEPENDENCIES = ['docker', 'docker-compose', 'rustc', 'cargo', 'rustup', 'npm', 'git'];
-module.exports.RUST_NIGHTLY = 'nightly-2019-05-20';
+module.exports.RUST_NIGHTLY = 'nightly-2019-08-01'; // TODO: Consider reading from the enigma-core repo
