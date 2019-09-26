@@ -250,7 +250,13 @@ function start() {
       await stop();
     }
     console.log('Starting Enigma Network...');
-    spawnProcess('docker-compose', ['up'], {cwd: baseFolder});
+    if (typeof process.env.NODES === 'undefined') {
+      spawnProcess('docker-compose', ['up'], {cwd: baseFolder});
+    } else {
+      let nodes = process.env.NODES;
+      spawnProcess('docker-compose', ['up', '--scale', 'core='+nodes, '--scale', 'p2p='+nodes], {cwd: baseFolder});
+
+    }
   });
 }
 
