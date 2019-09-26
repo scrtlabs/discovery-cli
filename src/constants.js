@@ -30,6 +30,7 @@ module.exports.FILE = {
   TRUFFLE_JS: 'truffle.js',
   TEST_CONTRACT: 'test_simple_addition.js',
   PACKAGE_JSON: 'package.json',
+  NGINX_CONF: 'nginx.conf'
 }
 
 module.exports.FOLDER = {
@@ -39,6 +40,7 @@ module.exports.FOLDER = {
   TEST: 'test',
   BUILD: 'build',
   CLIENT: 'client',
+  CONFIG: 'config',
   CONTRACT_PATH: 'target/wasm32-unknown-unknown/release/',
   SAMPLE_CONTRACT: 'simple_addition',
   MIGRATIONS: 'migrations',
@@ -61,6 +63,7 @@ module.exports.URL = {
   TEST_CONTRACT: `${RAWGIT_CLI}config/` + module.exports.FILE.TEST_CONTRACT,
   PACKAGE_JSON: `${RAWGIT_CLI}config/` + module.exports.FILE.PACKAGE_JSON,
   GIT_CLIENT: 'https://github.com/enigmampc/discovery-template-dapp.git',
+  NGINX_CONF: `${RAWGIT_CLI}config/` + module.exports.FILE.NGINX_CONF,
 }
 
 module.exports.DOCKER = {
