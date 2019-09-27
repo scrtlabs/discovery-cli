@@ -45,6 +45,11 @@ By default `discovery-cli` will run a docker network with one worker. As of vers
 NODES=3 discovery start
 ```
 
+NOTE: In order for the network to operate robustly with more than one node, you have to edit your `.env` file and change the following line (until we merge the changes in `develop` to `stable` in the docker images, at which point we will remove this notice)
+```
+DOCKER_TAG=develop
+```
+
 ## Uninstall
 ```
 npm remove -g @enigmampc/discovery-cli
