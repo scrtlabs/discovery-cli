@@ -64,7 +64,8 @@ async function downloadFiles() {
     axios.get(constants.URL.TRUFFLE_JS),
     axios.get(constants.URL.TEST_CONTRACT),
     axios.get(constants.URL.PACKAGE_JSON),
-  ]).then(axios.spread(async (r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11) => {
+    axios.get(constants.URL.NGINX_CONF)
+  ]).then(axios.spread(async (r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12) => {
       fs.writeFileSync(constants.FILE.DOCKER_COMPOSE_HW, r1.data);
       fs.writeFileSync(constants.FILE.DOCKER_COMPOSE_SW, r2.data);
       fs.writeFileSync(`${constants.FOLDER.SECRET_CONTRACTS}/${constants.FILE.CARGO_TOML}.template`, r3.data);
@@ -81,6 +82,7 @@ async function downloadFiles() {
       fs.writeFileSync(constants.FILE.TRUFFLE_JS, r9.data);
       fs.writeFileSync(path.join(constants.FOLDER.TEST, constants.FILE.TEST_CONTRACT), r10.data)
       fs.writeFileSync(constants.FILE.PACKAGE_JSON, JSON.stringify(r11.data));
+      fs.writeFileSync(path.join(constants.FOLDER.CONFIG, constants.FILE.NGINX_CONF), r12.data)
       console.log('Installing package dependendecies...')
       await git().clone(constants.URL.GIT_CLIENT, constants.FOLDER.CLIENT)
         .catch((err) => {console.log(err); process.exit(1);});
@@ -119,6 +121,9 @@ function createFolders() {
   }
   if (!fs.existsSync(constants.FOLDER.CLIENT)){
     fs.mkdirSync(constants.FOLDER.CLIENT);
+  }
+  if (!fs.existsSync(constants.FOLDER.CONFIG)){
+    fs.mkdirSync(constants.FOLDER.CONFIG);
   }
 }
 
@@ -250,7 +255,13 @@ function start() {
       await stop();
     }
     console.log('Starting Enigma Network...');
-    spawnProcess('docker-compose', ['up'], {cwd: baseFolder});
+    if (typeof process.env.NODES === 'undefined') {
+      spawnProcess('docker-compose', ['up'], {cwd: baseFolder});
+    } else {
+      let nodes = Math.max(1, Math.min(9, parseInt(process.env.NODES)));
+      spawnProcess('docker-compose', ['up', '--scale', 'core='+nodes, '--scale', 'p2p='+nodes], {cwd: baseFolder});
+
+    }
   });
 }
 
