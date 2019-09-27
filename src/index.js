@@ -258,7 +258,7 @@ function start() {
     if (typeof process.env.NODES === 'undefined') {
       spawnProcess('docker-compose', ['up'], {cwd: baseFolder});
     } else {
-      let nodes = process.env.NODES;
+      let nodes = Math.max(1, Math.min(9, parseInt(process.env.NODES)));
       spawnProcess('docker-compose', ['up', '--scale', 'core='+nodes, '--scale', 'p2p='+nodes], {cwd: baseFolder});
 
     }

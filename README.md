@@ -37,6 +37,14 @@ Options:
   --version  Show version number                                       [boolean]
 ```
 
+## Advanced Usage
+
+By default `discovery-cli` will run a docker network with one worker. As of version `0.1.0`, if you want to have more than 1 worker node in the network, you can specify the environment variable `NODES` to specify any number of nodes between 1 and 9. For example, to have 3 worker nodes, we would run:
+
+```
+NODES=3 discovery start
+```
+
 ## Uninstall
 ```
 npm remove -g @enigmampc/discovery-cli
