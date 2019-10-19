@@ -36,6 +36,7 @@ contract("Sample", accounts => {
       },
     );
     enigma.admin();
+    enigma.setTaskKeyPair('cupcake');
   })
 
   let task;
