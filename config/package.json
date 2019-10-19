@@ -7,7 +7,7 @@
   },
   "dependencies": {
     "dotenv": "^8.0.0",
-    "enigma-js": "^0.0.8"
+    "enigma-js": "^0.3.0"
   },
   "devDependencies": {},
   "scripts": {
