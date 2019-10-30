@@ -164,32 +164,39 @@ function getHWMode(){
   }
 }
 
-function pullImages(hwMode) {
-  // Should Get/Compute the actual sizes of those images
-  inquirer.prompt(questions.size).then(async function(answer) {
-    if(answer.size === 'n' | answer.size === 'N'){
-      process.exit()
-    }
+async function _pullImages(hwMode) {
+  dotenv.config({path: path.resolve(deps.findBasePath(), '.env')});
+  let dockerTag;
+  if (typeof process.env.DOCKER_TAG !== 'undefined' && process.env.DOCKER_TAG == 'develop') {
+    dockerTag = 'develop';
+  } else {
+    dockerTag = 'latest';
+  }
 
-    dotenv.config({path: path.resolve(deps.findBasePath(), '.env')});
-    let dockerTag;
-    if (typeof process.env.DOCKER_TAG !== 'undefined' && process.env.DOCKER_TAG == 'develop') {
-      dockerTag = 'develop';
-    } else {
-      dockerTag = 'latest';
-    }
+  console.log('Pulling Enigma Docker images...')
+  await docker.pullImage(constants.DOCKER.P2P, dockerTag);
+  await docker.pullImage(constants.DOCKER.CONTRACT, dockerTag);
+  if(hwMode){
+    await docker.pullImage(constants.DOCKER.KM_HW, dockerTag);
+    await docker.pullImage(constants.DOCKER.CORE_HW, dockerTag);
+  } else {
+    await docker.pullImage(constants.DOCKER.KM_SW, dockerTag);
+    await docker.pullImage(constants.DOCKER.CORE_SW, dockerTag);
+  }
+}
 
-    console.log('Pulling Enigma Docker images...')
-    await docker.pullImage(constants.DOCKER.P2P, dockerTag);
-    await docker.pullImage(constants.DOCKER.CONTRACT, dockerTag);
-    if(hwMode){
-      await docker.pullImage(constants.DOCKER.KM_HW, dockerTag);
-      await docker.pullImage(constants.DOCKER.CORE_HW, dockerTag);
-    } else {
-      await docker.pullImage(constants.DOCKER.KM_SW, dockerTag);
-      await docker.pullImage(constants.DOCKER.CORE_SW, dockerTag);
-    }
-  });
+function pullImages(hwMode, yes=false) {
+  if(yes){
+    _pullImages(hwMode);
+  } else {
+    // Should Get/Compute the actual sizes of those images
+    inquirer.prompt(questions.size).then(function(answer) {
+      if(answer.size === 'n' | answer.size === 'N'){
+        process.exit()
+      }
+      _pullImages(hwMode);
+    });
+  }
 }
 
 function init() {
@@ -284,7 +291,7 @@ argv
     contracts.migrate();
   })
   .command('pull', 'Pull the latest images for the containers in the network', () => {}, () => {
-    pullImages(getHWMode());
+    pullImages(getHWMode(), argv.argv.y);
   })
   .command('start', 'Launch the Discovery Docker network', () => {}, () => {
     start();
