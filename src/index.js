@@ -64,8 +64,9 @@ async function downloadFiles() {
     axios.get(constants.URL.TRUFFLE_JS),
     axios.get(constants.URL.TEST_CONTRACT),
     axios.get(constants.URL.PACKAGE_JSON),
-    axios.get(constants.URL.NGINX_CONF)
-  ]).then(axios.spread(async (r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12) => {
+    axios.get(constants.URL.NGINX_CONF),
+    axios.get(constants.URL.GIT_IGNORE)
+  ]).then(axios.spread(async (r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13) => {
       fs.writeFileSync(constants.FILE.DOCKER_COMPOSE_HW, r1.data);
       fs.writeFileSync(constants.FILE.DOCKER_COMPOSE_SW, r2.data);
       fs.writeFileSync(`${constants.FOLDER.SECRET_CONTRACTS}/${constants.FILE.CARGO_TOML}.template`, r3.data);
@@ -80,9 +81,10 @@ async function downloadFiles() {
       fs.writeFileSync(path.join(constants.FOLDER.MIGRATIONS, constants.FILE.INITIAL_MIGRATION), r7.data);
       fs.writeFileSync(path.join(constants.FOLDER.MIGRATIONS, constants.FILE.DEPLOY_CONTRACTS), r8.data);
       fs.writeFileSync(constants.FILE.TRUFFLE_JS, r9.data);
-      fs.writeFileSync(path.join(constants.FOLDER.TEST, constants.FILE.TEST_CONTRACT), r10.data)
+      fs.writeFileSync(path.join(constants.FOLDER.TEST, constants.FILE.TEST_CONTRACT), r10.data);
       fs.writeFileSync(constants.FILE.PACKAGE_JSON, JSON.stringify(r11.data));
-      fs.writeFileSync(path.join(constants.FOLDER.CONFIG, constants.FILE.NGINX_CONF), r12.data)
+      fs.writeFileSync(path.join(constants.FOLDER.CONFIG, constants.FILE.NGINX_CONF), r12.data);
+      fs.writeFileSync(constants.FILE.GIT_IGNORE, r13.data);
       console.log('Installing package dependendecies...')
       await git().clone(constants.URL.GIT_CLIENT, constants.FOLDER.CLIENT)
         .catch((err) => {console.log(err); process.exit(1);});
