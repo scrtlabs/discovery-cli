@@ -290,6 +290,7 @@ argv
     deps.compile();
   })
   .command('migrate', 'Migrate Secret Contracts and Smart Contracts', () => {}, () => {
+    deps.compile();
     contracts.migrate();
   })
   .command('pull', 'Pull the latest images for the containers in the network', () => {}, () => {
@@ -302,6 +303,7 @@ argv
     stop();
   })
   .command('test', 'Test Secret Contracts and Smart Contracts', () => {}, () => {
+    deps.compile();
     contracts.test();
   })
   .demandCommand(1)
