@@ -6,7 +6,7 @@
     "test": "test"
   },
   "dependencies": {
-    "dotenv": "^8.0.0",
+    "dotenv": "^8.2.0",
     "enigma-js": "^0.3.0"
   },
   "devDependencies": {},
