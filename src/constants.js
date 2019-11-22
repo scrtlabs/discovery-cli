@@ -30,7 +30,8 @@ module.exports.FILE = {
   TRUFFLE_JS: 'truffle.js',
   TEST_CONTRACT: 'test_simple_addition.js',
   PACKAGE_JSON: 'package.json',
-  NGINX_CONF: 'nginx.conf'
+  NGINX_CONF: 'nginx.conf',
+  GIT_IGNORE: '.gitignore'
 }
 
 module.exports.FOLDER = {
@@ -64,6 +65,7 @@ module.exports.URL = {
   PACKAGE_JSON: `${RAWGIT_CLI}config/` + module.exports.FILE.PACKAGE_JSON,
   GIT_CLIENT: 'https://github.com/enigmampc/discovery-template-dapp.git',
   NGINX_CONF: `${RAWGIT_CLI}config/` + module.exports.FILE.NGINX_CONF,
+  GIT_IGNORE: `${RAWGIT_CLI}config/` + module.exports.FILE.GIT_IGNORE,
 }
 
 module.exports.DOCKER = {
