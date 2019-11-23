@@ -13,7 +13,6 @@ const compose = require('docker-compose');
 
 const deps = require('./deps');
 const docker = require('./docker');
-const contracts = require('./contracts');
 const constants = require('./constants');
 const questions = require('./questions');
 
@@ -291,7 +290,8 @@ argv
   })
   .command('migrate', 'Migrate Secret Contracts and Smart Contracts', () => {}, () => {
     deps.compile();
-    contracts.migrate();
+    const baseFolder = deps.findBasePath();
+    spawnProcess('./node_modules/truffle/build/cli.bundled.js', ['migrate', '--reset', '--network', 'development'], {cwd: baseFolder});
   })
   .command('pull', 'Pull the latest images for the containers in the network', () => {}, () => {
     pullImages(getHWMode(), argv.argv.y);
@@ -304,7 +304,8 @@ argv
   })
   .command('test', 'Test Secret Contracts and Smart Contracts', () => {}, () => {
     deps.compile();
-    contracts.test();
+    const baseFolder = deps.findBasePath();
+    spawnProcess('./node_modules/truffle/build/cli.bundled.js', ['test', '--network', 'development'], {cwd: baseFolder});
   })
   .demandCommand(1)
   .argv
