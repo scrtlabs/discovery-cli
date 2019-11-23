@@ -86,13 +86,16 @@ module.exports.findBasePath = function(){
     }
   }
 
-  const buildFolder = path.join(folderFound, constants.FOLDER.BUILD);
-  if (!fs.existsSync(buildFolder)){
-    fs.mkdirSync(buildFolder);
-  }
+
   
   if (folderFound &&
-      fs.readdirSync(folderFound).filter(f => /^secret_contracts$/.test(f)).length) {
+      fs.readdirSync(folderFound).filter(f => /^secret_contracts$/.test(f)).length &&
+      fs.readdirSync(folderFound).filter(f => /^smart_contracts$/.test(f)).length) {
+
+    const buildFolder = path.join(folderFound, constants.FOLDER.BUILD);
+    if (!fs.existsSync(buildFolder)){
+      fs.mkdirSync(buildFolder);
+    }
     return folderFound;
   } else {
     console.log('Cannot find the expected directory structure.');
