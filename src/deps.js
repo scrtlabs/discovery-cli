@@ -85,8 +85,13 @@ module.exports.findBasePath = function(){
       break;
     }
   }
+
+  const buildFolder = path.join(folderFound, constants.FOLDER.BUILD);
+  if (!fs.existsSync(buildFolder)){
+    fs.mkdirSync(buildFolder);
+  }
+  
   if (folderFound &&
-      fs.readdirSync(folderFound).filter(f => /^build$/.test(f)).length &&
       fs.readdirSync(folderFound).filter(f => /^secret_contracts$/.test(f)).length) {
     return folderFound;
   } else {
