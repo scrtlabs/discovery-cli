@@ -1,6 +1,6 @@
 {
   "name": "@enigmampc/discovery-cli",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "A command-line interface for the Enigma Protocol developer environment",
   "main": "src/index.js",
   "scripts": {
@@ -11,34 +11,24 @@
   "author": "Enigma Team <info@enigma.co>",
   "license": "AGPL-3.0-or-later",
   "dependencies": {
-    "axios": "^0.18.1",
-    "chalk": "^2.4.2",
+    "@truffle/workflow-compile": "^2.1.13",
+    "axios": "^0.19.0",
+    "chalk": "^3.0.0",
     "clui": "^0.3.6",
-    "docker-compose": "^0.17.4",
-    "dotenv": "^8.0.0",
+    "docker-compose": "^0.22.2",
+    "dotenv": "^8.2.0",
     "enigma-js": "^0.3.0",
     "get-cursor-position": "^1.0.5",
     "hasbin": "^1.2.3",
-    "inquirer": "^6.4.1",
+    "inquirer": "^7.0.0",
     "node-docker-api": "^1.1.22",
-    "simple-git": "^1.113.0",
-    "truffle-legacy-system": "^1.0.7",
-    "@truffle/artifactor": "^4.0.31",
-    "@truffle/compile-solidity": "^4.2.3",
-    "@truffle/config": "^1.1.21",
-    "@truffle/contract": "^4.0.31",
-    "@truffle/core": "^5.0.21",
-    "@truffle/migrate": "^3.0.20",
-    "@truffle/resolver": "^5.0.17",
-    "@truffle/workflow-compile": "^2.0.18",
-    "web3": "1.0.0-beta.37",
-    "yargs": "^13.2.4"
+    "simple-git": "^1.126.0",
+    "truffle": "^5.1.1",
+    "web3": "1.2.4",
+    "yargs": "^15.0.2"
   },
   "bin": {
     "discovery": "src/index.js"
-  },
-  "devDependencies": {
-    "eslint": "^5.16.0"
   },
   "repository": {
     "type": "git",
