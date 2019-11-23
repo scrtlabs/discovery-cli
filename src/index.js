@@ -289,6 +289,7 @@ argv
     deps.compile();
   })
   .command('migrate', 'Migrate Secret Contracts and Smart Contracts', () => {}, () => {
+    deps.compile();
     const baseFolder = deps.findBasePath();
     spawnProcess('./node_modules/truffle/build/cli.bundled.js', ['migrate', '--reset', '--network', 'development'], {cwd: baseFolder});
   })
@@ -302,6 +303,7 @@ argv
     stop();
   })
   .command('test', 'Test Secret Contracts and Smart Contracts', () => {}, () => {
+    deps.compile();
     const baseFolder = deps.findBasePath();
     spawnProcess('./node_modules/truffle/build/cli.bundled.js', ['test', '--network', 'development'], {cwd: baseFolder});
   })
