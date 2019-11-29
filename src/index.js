@@ -133,7 +133,30 @@ function contentsEnvFile(mode) {
   return `COMPOSE_PROJECT_NAME=enigma\nSGX_MODE=${mode}\nBUILD_CONTRACTS_PATH=${folder}\nDOCKER_TAG=latest`;
 }
 
-function swhwMode() {
+function swhwMode(params) {
+  if('mode' in params && params.mode.match(/sw/i)) {
+    fs.writeFileSync(constants.FILE.ENV, contentsEnvFile('SW'), constants.ENCODING);
+    if(fs.existsSync('docker-compose.yml')) {
+      fs.unlinkSync('docker-compose.yml');
+    }
+    fs.symlinkSync(constants.FILE.DOCKER_COMPOSE_SW, 'docker-compose.yml')
+    if('y' in params) {
+      pullImages(false, true);
+    } else {
+      pullImages(false, false);
+    }
+  } else if('mode' in params && params.mode.match(/hw/i)) {
+      fs.writeFileSync(constants.FILE.ENV, contentsEnvFile('HW'), constants.ENCODING);
+      if(fs.existsSync('docker-compose.yml')) {
+        fs.unlinkSync('docker-compose.yml');
+      }
+      fs.symlinkSync(constants.FILE.DOCKER_COMPOSE_HW, 'docker-compose.yml')
+      if('y' in params) {
+        pullImages(true, true);
+      } else {
+        pullImages(true, false);
+      }
+  }
   inquirer.prompt(questions.mode).then(answer => {
     if(answer.mode === 'sw' | answer.mode === 'SW') {
       fs.writeFileSync(constants.FILE.ENV, contentsEnvFile('SW'), constants.ENCODING);
@@ -200,7 +223,14 @@ function pullImages(hwMode, yes=false) {
   }
 }
 
-function init() {
+async function _init(params){
+  await deps.checkDependencies();
+  createFolders();
+  await downloadFiles();
+  swhwMode(params);
+}
+
+function init(params) {
   const e = '    ______      _                               \n   / ____/___  (_)___ _____ ___  ____ _         \n  / __/ / __ \\/ / __ `/ __ `__ \\/ __ `/         \n / /___/ / / / / /_/ / / / / / / /_/ /          \n/_____/_/ /_/_/\\__, /_/ /_/ /_/\\__,_/           \n              /____/                            \n    ____             __                   __    \n   / __ \\_________  / /_____  _________  / /    \n  / /_/ / ___/ __ \\/ __/ __ \\/ ___/ __ \\/ /     \n / ____/ /  / /_/ / /_/ /_/ / /__/ /_/ / /      \n/_/   /_/   \\____/\\__/\\____/\\___/\\____/_/       \n                                                \n    ____  _                                     \n   / __ \\(_)_____________ _   _____  _______  __\n  / / / / / ___/ ___/ __ \\ | / / _ \\/ ___/ / / /\n / /_/ / (__  ) /__/ /_/ / |/ /  __/ /  / /_/ / \n/_____/_/____/\\___/\\____/|___/\\___/_/   \\__, /  \n                                       /____/   ';
   const ae = e.split('\n');
   const l = `                        .:.             
@@ -242,15 +272,17 @@ function init() {
     )
   );
 
-  inquirer.prompt(questions.start).then(async function(answer) {
-    if(answer.start === 'n' | answer.start === 'N'){
-      process.exit()
-    }
-    await deps.checkDependencies();
-    createFolders();
-    await downloadFiles();
-    swhwMode();
-  });
+  if(params.y){
+    _init(params);
+  } else {
+    inquirer.prompt(questions.start).then(async function(answer) {
+      if(answer.start === 'n' | answer.start === 'N'){
+        process.exit()
+      }
+      _init(params);
+    });
+  }
+
 }
 
 function start() {
@@ -268,7 +300,6 @@ function start() {
     } else {
       let nodes = Math.max(1, Math.min(9, parseInt(process.env.NODES)));
       spawnProcess('docker-compose', ['up', '--scale', 'core='+nodes, '--scale', 'p2p='+nodes], {cwd: baseFolder});
-
     }
   });
 }
@@ -283,7 +314,11 @@ async function stop() {
 
 argv
   .command('init', 'Initialize Enigma Discovery development environment', () => {}, () => {
-    init();
+    if('mode' in argv.argv && ! argv.argv.mode.match(/[hs]w/i)) {
+      console.log('Invalid value for mode, choose from "hw" or "sw".');
+    } else {
+      init(argv.argv);
+    }
   })
   .command('compile', 'Compile Secret Contracts and Smart Contracts', () => {}, () => {
     deps.compile();

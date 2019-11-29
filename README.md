@@ -50,6 +50,14 @@ NOTE: In order for the network to operate robustly with more than one node, you 
 DOCKER_TAG=develop
 ```
 
+As of version `0.1.6`, the initialization of `discovery init` can be automated to bypass user input on the terminal, by adding the following optional parameters:
+
+`discovery init -y --mode=hw|sw`
+
+where `--mode` takes either `hw` for hardware mode or `sw` for software mode.
+
+
+
 ## Uninstall
 ```
 npm remove -g @enigmampc/discovery-cli
