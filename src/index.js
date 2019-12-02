@@ -323,8 +323,8 @@ argv
   .command('compile', 'Compile Secret Contracts and Smart Contracts', () => {}, () => {
     deps.compile();
   })
-  .command('migrate', 'Migrate Secret Contracts and Smart Contracts', () => {}, () => {
-    deps.compile();
+  .command('migrate', 'Migrate Secret Contracts and Smart Contracts', () => {}, async () => {
+    await deps.compile();
     const baseFolder = deps.findBasePath();
     spawnProcess('./node_modules/truffle/build/cli.bundled.js', ['migrate', '--reset', '--network', 'development'], {cwd: baseFolder});
   })
