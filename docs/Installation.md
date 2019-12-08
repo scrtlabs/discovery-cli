@@ -33,3 +33,56 @@ If `python` is not yet installed on your machine, you should add it.
 Error: connect EACCES /var/run/docker.sock
 ```
 Follow [these](https://docs.docker.com/install/linux/linux-postinstall/) instructions to create `docker` group and add your user.
+
+# Example Ubuntu Install
+This script automates steps 1-5 above and includes troubleshooting fixes. It was created for Ubuntu 18. 
+```
+#update environment
+sudo apt-get update && sudo apt-get -y upgrade
+
+sudo apt-get --assume-yes install \
+   apt-transport-https \
+   ca-certificates \
+   curl \
+   gnupg-agent \
+   software-properties-common 
+
+#docker install steps
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo apt-key fingerprint 0EBFCD88
+sudo add-apt-repository \
+  "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) \
+  stable"
+sudo apt-get update
+sudo apt-get --assume-yes install docker-ce docker-ce-cli containerd.io
+sudo docker run hello-world
+
+#docker compose install steps
+sudo curl -L "https://github.com/docker/compose/releases/download/1.25.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+docker-compose --version
+
+#git install steps
+sudo apt-get --assume-yes install git-all
+
+#rust install steps
+#Note: the following line was altered to avoid a prompt
+curl -s https://sh.rustup.rs | bash /dev/stdin -y
+source $HOME/.cargo/env
+
+#nvm install steps
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.1/install.sh | bash
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+command -v nvm
+nvm install 8
+
+#additional missing code in base environment
+sudo apt-get --assume-yes install python make build-essential
+
+#fix problem with docker permissions
+sudo usermod -aG docker $USER
+```
+Once finished run `newgrp docker` and proceed to step 6
