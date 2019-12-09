@@ -37,6 +37,7 @@ Follow [these](https://docs.docker.com/install/linux/linux-postinstall/) instruc
 # Example Ubuntu Install
 This script automates steps 1-5 above and includes troubleshooting fixes. It was created for Ubuntu 18. 
 ```
+
 #update environment
 sudo apt-get update && sudo apt-get -y upgrade
 sudo apt-get --assume-yes install \
@@ -54,7 +55,6 @@ sudo add-apt-repository \
   stable"
 sudo apt-get update
 sudo apt-get --assume-yes install docker-ce docker-ce-cli containerd.io
-sudo docker run hello-world
 #docker compose install steps
 sudo curl -L "https://github.com/docker/compose/releases/download/1.25.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
@@ -70,11 +70,12 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.1/install.sh | bash
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-command -v nvm
-nvm install 8
+nvm install 10
 #additional missing code in base environment
 sudo apt-get --assume-yes install python make build-essential
 #fix problem with docker permissions
 sudo usermod -aG docker $USER
 ```
+Copy and paste the following code into your text editor of choice, save it as a file myscript.bash, and make it executable with 
+'chmod +x myscript.bash' the run script
 Once finished run restart your shell and proceed to step 6
