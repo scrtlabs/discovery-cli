@@ -37,7 +37,7 @@ Follow [these](https://docs.docker.com/install/linux/linux-postinstall/) instruc
 # Example Ubuntu Install
 This script automates steps 1-5 above and includes troubleshooting fixes. It was created for Ubuntu 18. 
 ```
-
+#!/bin/bash
 #update environment
 sudo apt-get update && sudo apt-get -y upgrade
 sudo apt-get --assume-yes install \
