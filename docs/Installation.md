@@ -77,5 +77,4 @@ sudo apt-get --assume-yes install python make build-essential
 sudo usermod -aG docker $USER
 ```
 Copy and paste the following code into your text editor of choice, save it as a file myscript.bash, and make it executable with 
-'chmod +x myscript.bash' the run script
-Once finished run restart your shell and proceed to step 6
+`chmod +x myscript.bash`. Then run the script. Once finished, restart your shell (or open a new terminal) and proceed to step 6.
