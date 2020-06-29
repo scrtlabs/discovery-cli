@@ -63,8 +63,15 @@ docker-compose --version
 sudo apt-get --assume-yes install git-all
 #rust install steps
 #Note: the following line was altered to avoid a prompt
+"""
+These steps fail instead 
 curl -s https://sh.rustup.rs | bash /dev/stdin -y
 source $HOME/.cargo/env
+
+"""
+# try to install rust 
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+
 #nvm install steps
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.1/install.sh | bash
 export NVM_DIR="$HOME/.nvm"
